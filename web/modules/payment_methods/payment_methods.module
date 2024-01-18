@@ -1,0 +1,33 @@
+<?php
+
+function payment_methods_theme($existing, $type, $theme, $path)
+{
+    return [
+        'payment-methods' => [
+            'variables' => [
+                'content' => null,
+            ],
+        ],
+    ];
+}
+
+function payment_methods_menu()
+{
+  $item['payment_methods'] = [
+    'title' => 'Payment Methods',
+    'description' => 'Payment Methods',
+    'page callback' => 'payment_methods_listing',
+    'route' => 'payment_methods.listing',
+    'access arguments' => ['access content']
+  ];
+
+  $item['payment_methods_add'] = [
+    'title' => 'Add New Payment Method',
+    'description' => 'Add Payment Method',
+    'page callback' => 'payment_methods_add',
+    'route' => 'payment_methods.add',
+    'access arguments' => ['access content']
+  ];
+
+  return $item;
+}

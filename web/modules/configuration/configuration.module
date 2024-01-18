@@ -1,0 +1,22 @@
+<?php
+
+function curl($url, $postfields, $verb = "POST") {
+  $curl = curl_init();
+
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $verb);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $postfields);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  curl_close($curl);
+  if ($err) {
+    return FALSE;
+  }
+  else {
+    return $response;
+  }
+
+}

@@ -1,0 +1,34 @@
+dealer_library:
+  version: 1.1.0
+  js:
+    js/popper.js: {}
+    js/datatables.js: {}
+    js/bootstrap.min.js: {}
+    js/sweetalert.min.js: {}
+    js/custom.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+  css:
+      layout:
+        css/font-awesome.min.css: {}
+        css/sweetalert.min.css: {}
+        css/datatables/datatables.css: {}
+        css/bootstrap.min.css: {}
+        css/custom.css: {}
+      theme:
+        css/font-awesome.min.css: {}
+        css/sweetalert.min.css: {}
+        css/datatables/datatables.css: {}
+        css/bootstrap.min.css: {}
+        css/custom.css: {}
+
+
+list_dealer_library:
+  version: 1.0
+  js:
+    js/highcharts.js: {}
+    js/list-retailer/custom.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings

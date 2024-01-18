@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <h2> Liste des revendeurs </h2>
+    <div class="row" style="margin-bottom:1em;">
+        <div class="col-md-12">
+            <div class="widget">
+                <a style="float:right;background-color:#ff7901;border-color:#f5f5f2;" class="btn btn-info bs-tooltip btn-telecharger-liste" href="{{ path('dealer.list.in.format', {'format': 'xlsx'}) }}" >
+                    Télécharger <i class="fa fa-download" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <table id="list_dealer" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            {% for column in header %}
+                <th>
+                    {{ column }}
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr>
+                <td>
+                    {{ row.last_name }}
+                </td>
+                <td>
+                    {{ row.first_name }}
+                </td>
+                <td>
+                    {{ row.msisdn }}
+                </td>
+                <td>
+                    {{ row.email }}
+                </td>
+                <td>
+                  {{ row.id_validation }}
+                </td>
+                <td>
+                    {{ row.n_retailers }}
+                </td>
+                <td>
+                    <a href={{ row.action }}>Détails</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

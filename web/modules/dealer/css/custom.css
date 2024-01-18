@@ -1,0 +1,28 @@
+body {
+  display: none;
+}
+
+.btn {
+  border-radius: 0;
+}
+
+.nav-retailers, .nav-stats, .nav-operations {
+  border-radius: 0;
+}
+
+.activated, .declined{
+  margin-bottom: 0;
+}
+
+.btn.focus, .btn:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+div#block-adminimal-theme-page-title{
+  margin-top: 20px;
+}
+
+div#block-adminimal-theme-content{
+  margin-top: 45px;
+}

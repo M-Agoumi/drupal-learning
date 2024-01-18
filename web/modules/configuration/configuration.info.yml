@@ -1,0 +1,15 @@
+# Nom du module.
+name: Configuration Générale
+# Description du module.
+description: 'Configuration Générale'
+# Type de code (module, theme).
+type: module
+# Version de Drupal pour laquelle le module est developpe.
+core: 8.x
+# Version du module.
+version: 8.x-1.0
+# Groupe du module.
+package: Orange Saphir
+
+#
+core_version_requirement: ^8 || ^9 || ^10

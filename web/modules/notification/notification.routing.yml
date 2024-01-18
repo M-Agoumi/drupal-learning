@@ -1,0 +1,22 @@
+api.notification:
+  path: '/api/notification/new'
+  defaults:
+    _controller: 'Drupal\notification\Controller\notificationController::newNotification'
+  requirements:
+    _permission: 'access content'
+
+api.notification.count:
+  path: '/admin/notification/unread/count'
+  defaults:
+    _controller: 'Drupal\notification\Controller\notificationController::getCountUnreadMessage'
+  requirements:
+    _permission: 'access content'
+
+
+api.notification.list:
+  path: '/admin/notification/list'
+  defaults:
+    _controller: 'Drupal\notification\Controller\notificationViewController::allNotifications'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+

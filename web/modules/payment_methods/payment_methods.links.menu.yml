@@ -1,0 +1,13 @@
+payment_methods.listing:
+  title: 'Payment Methods'
+  parent: system.admin_structure
+  route_name: payment_methods.listing
+  description: 'Manage Payment Methods'
+  weight: 100
+
+payment_methods.add:
+  title: 'Add New Payment Method'
+  parent: payment_methods.listing
+  route_name: payment_methods.add
+  description: 'Add Payment Method'
+  weight: 10

@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the payment_methods module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function payment_methods_install() {;
+}
+
+/**
+ * Implement hook_schema().
+ */
+function payment_methods_schema()
+{
+  $schema['payment_methods'] = [
+    'description' => 'The base table for payment methods.',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary identifier for a payment method.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'description' => 'The name of the payment method.',
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+      'name_ar' => [
+        'description' => 'The name of the payment method in Arabic.',
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+      ],
+      'code' => [
+        'description' => 'The code of the payment method.',
+        'type' => 'varchar',
+        'length' => 21,
+        'not null' => TRUE,
+      ],
+      'description' => [
+        'description' => 'The description of the payment method.',
+        'type' => 'text',
+        'not null' => FALSE
+      ],
+      'description_ar' => [
+        'description' => 'The description of the payment method in Arabic.',
+        'type' => 'text',
+        'not null' => FALSE
+      ],
+      'status' => [
+        'description' => 'The status of the payment method.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0
+      ],
+      'created' => [
+        'description' => 'The Unix timestamp when the payment method was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0
+      ],
+      'createdBy' => [
+        'description' => 'The Id of the User who created the payment method.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE
+      ],
+      'changed' => [
+        'description' => 'The Unix timestamp when the payment method was most recently saved.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0
+      ],
+      'changedBy' => [
+        'description' => 'The Id of the User who changed the payment method.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'status' => ['status']
+    ]
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function payment_methods_uninstall() {
+  $schema = payment_methods_schema();
+//  db_drop_table('payment_methods');
+}

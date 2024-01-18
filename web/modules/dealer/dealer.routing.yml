@@ -1,0 +1,138 @@
+homepage:
+  path: '/homepage'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\indexController::homepage'
+  requirements:
+    _permission: 'access content'
+
+dealer.list:
+  path: '/admin/revendeurs/list'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::listRevendeur'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+dealer.retailer.list:
+  path: '/admin/revendeurs/get/{id_revendeur}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::detailRevendeur'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+dealer.validation:
+  path: '/admin/revendeurs/list-validation'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::validationRevendeur'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+dealer.retailers.validation:
+  path: '/admin/revendeurs/validate/{id_revendeur}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::validationRetailers'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+dealer.list.in.format:
+  path: '/admin/revendeurs/dealers_list/{format}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\ExportController::getValidatedDealersListInTheGivenFormat'
+    format: json
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+    format: xlsx|json
+
+unverified.dealer.list.in.format:
+  path: '/admin/revendeurs/unverified_dealers_list/{format}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\ExportController::getUnvalidatedDealersListInTheGivenFormat'
+    format: json
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+    format: xlsx|json
+
+operations.list.in.format:
+  path: '/admin/operations/{id_revendeur}/operations_list/{format}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\ExportController::getOperationsListInTheGivenFormat'
+    format: json
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+    format: xlsx|json
+    id_revendeur: \d+
+
+retailers.list.in.format:
+  path: '/admin/retailers/{id_revendeur}/retailers_list/{format}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\ExportController::getRetailersListInTheGivenFormat'
+    format: json
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+    format: xlsx|json
+    id_revendeur: \d+
+
+unverified.retailers.list.in.format:
+  path: '/admin/retailers/{id_revendeur}/unverified_retailers_list/{format}'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\ExportController::getUnvalidatedRetailersListInTheGivenFormat'
+    format: json
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+    format: xlsx|json
+    id_revendeur: \d+
+
+dealer.retailers.count:
+  path: '/admin/retailers/count'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::countActivatedRetailers'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+retailer.activate:
+  path: '/admin/revendeurs/retailer/activate'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::retailerActivate'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+retailer.decline:
+  path: '/admin/revendeurs/retailer/decline'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::retailerDecline'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+revendeur.accept:
+  path: '/admin/revendeur/accept'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::acceptRevendeur'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+revendeur.decline:
+  path: '/admin/revendeur/decline'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::declineRevendeur'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+revendeur.dashboard:
+  path: '/admin/revendeur/dashboard'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::dealerDashboard'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+list.revendeur.duplicated.retailer:
+  path: '/admin/revendeur/duplicated/retailer'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\listDealerController::duplicatedRetailer'
+  requirements:
+    _role: 'administrator+administrateur_backoffice+regional'
+
+
+version.list:
+  path: '/admin/version/list'
+  defaults:
+    _controller: 'Drupal\dealer\Controller\VersionController::listVersion'
+  requirements:
+    _role: 'administrator+administrateur_backoffice'

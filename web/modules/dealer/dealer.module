@@ -1,0 +1,245 @@
+<?php
+/**
+ * @file
+ * Code for the dealer module.
+ */
+
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_theme().
+ */
+//hook
+function dealer_theme($existing, $type, $theme, $path) {
+
+  return array(
+    'homepage' => array(
+      'variables' => array('items' => array())
+    ),
+    'list-dealer' => array(
+      'variables' => array('header' => array(),'rows' => array(),)
+    ),
+    'list-retailer' => array(
+      'variables' => array('header' => array(),'retailers' => array(),'userInfos' => array(),'operationsHeaders' => array(),'operations' => array(),)
+    ),
+    'list-version' => array(
+      'variables' => array('header' => array(),'rows' => array())
+    ),
+    'validate-dealer' => array(
+      'variables' => array('header' => array(),'rows' => array(),)
+    ),
+    'validate-retailers' => array(
+      'variables' => array('header' => array(),'retailers' => array(),'userInfos' => array(),)
+    ),
+    'dashboard-dealer' => array(
+      'variables' => array('sales' => array(),'purchases' => array(),)
+    ),
+  );
+
+}
+
+function dealer_preprocess_page(&$variables) {
+
+  $current_user = \Drupal::currentUser();
+  $account = User::load($current_user->id());
+
+  $current_path = \Drupal::service('path.current')->getPath();
+
+  $route = \Drupal::routeMatch()->getRouteName();
+  $path = "";
+  if($route == "user.login" || $route == "user.register" || $route == "user.pass") {
+    $path = '/';
+  }
+  else if ($route == "homepage") {
+    if($account->hasRole("administrator")) {
+      $path = '/admin';
+    }
+    elseif($account->hasRole("regional")) {
+      $path = '/admin/revendeurs/list';
+    }
+    elseif($account->hasRole("administrateur_backoffice")) {
+      $path = '/admin/structure/taxonomy/manage/tuile_dashboard/overview';
+    }
+  }
+  else if ($current_path == "/admin" || $current_path == "/admin/") {
+    if($account->hasRole("regional")) {
+      $path = '/admin/revendeurs/list';
+    }
+    elseif($account->hasRole("administrateur_backoffice")) {
+      $path = '/admin/structure/taxonomy/manage/tuile_dashboard/overview';
+    }
+  }
+
+  if($path) {
+    $response = new RedirectResponse($path);
+    $response->send();
+    return;
+  }
+
+  $notificationUrl = \Drupal\Core\Url::fromRoute('api.notification',array(), array('absolute' => TRUE))->toString();
+  $variables['#attached']['drupalSettings']['notificationUrl'] = $notificationUrl;
+
+  $revendeurDashboard = \Drupal\Core\Url::fromRoute('revendeur.dashboard',array(), array('absolute' => TRUE))->toString();
+  $variables['#attached']['drupalSettings']['dashboardUrl'] = $revendeurDashboard;
+
+  $countRetailers = \Drupal\Core\Url::fromRoute('dealer.retailers.count',array(), array('absolute' => TRUE))->toString();
+  $variables['#attached']['drupalSettings']['countRetailers'] = $countRetailers;
+
+  $variables['#attached']['library'][] = 'dealer/dealer_library';
+
+}
+
+function dealer_user_login($account) {
+  if($account->hasRole("administrateur_backoffice")) {
+    $path = '/admin/structure/taxonomy/manage/tuile_dashboard/overview';
+    $response = new RedirectResponse($path);
+    $response->send();
+    return;
+  }
+  if($account->hasRole("regional")) {
+    $path = '/admin/revendeurs/list';
+    $response = new RedirectResponse($path);
+    $response->send();
+    return;
+  }
+  }
+
+
+
+
+  function getCurrentRegionalCity() {
+    $current_user = \Drupal::currentUser();
+    $userId = $current_user->id();
+    $user_ville = User::load($userId)->get(
+      "field_ville"
+    )[0]->target_id; //
+
+    $ville_tid = \Drupal::entityQuery('taxonomy_term')->condition(
+      'vid',
+      'ville'
+    )->condition('tid', $user_ville)->execute();
+
+    $ville_term = \Drupal\taxonomy\Entity\Term::load(reset($ville_tid));
+
+    return $ville_term->field_code->value;
+  }
+
+
+
+  function getCurrentRegionalCities() {
+    $current_user = \Drupal::currentUser();
+    $userId = $current_user->id();
+    $user_region = User::load($userId)->get(
+      "field_region"
+    )[0]->target_id; //
+
+
+    $villeTid = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', 'ville')
+      ->condition('field_region', $user_region)
+      ->execute();
+
+    $taxonomyTermStorage = \Drupal::entityManager()->getStorage('taxonomy_term');
+    $temsVilles = $taxonomyTermStorage->loadMultiple($villeTid);
+    $villes = array();
+    foreach ($temsVilles as $ville_term) {
+      array_push($villes,$ville_term->field_code->value);
+    }
+    return $villes;
+  }
+
+
+function formatDashboardResponse($factureAchat, $factureVente, $rechargeAchat, $rechargeVente, $scratchAchat, $months){
+  $series = array();
+  $AchatFacture = array();
+  $VenteFacture = array();
+  $AchatRecharge = array();
+  $VenteRecharge = array();
+  $scratchRecharge = array();
+  $categories = array();
+
+  $AchatFacture['name'] = "Achat Facture";
+  $AchatFacture['data'] = array();
+  $VenteFacture['name'] = "Vente Facture";
+  $VenteFacture['data'] = array();
+  $AchatRecharge['name'] = "Achat Recharge";
+  $AchatRecharge['data'] = array();
+  $VenteRecharge['name'] = "Vente Recharge";
+  $VenteRecharge['data'] = array();
+  $scratchRecharge['name'] = "Scratch Achat";
+  $scratchRecharge['data'] = array();
+
+  foreach($months as $month){
+    array_push($categories, $month);
+
+    $data = isset($factureAchat[$month]) ? $factureAchat[$month] : 0;
+    array_push($AchatFacture['data'], $data);
+
+    $data = isset($factureVente[$month]) ? $factureVente[$month] : 0;
+    array_push($VenteFacture['data'], $data);
+
+    $data = isset($rechargeAchat[$month]) ? $rechargeAchat[$month] : 0;
+    array_push($AchatRecharge['data'], $data);
+
+    $data = isset($rechargeVente[$month]) ? $rechargeVente[$month] : 0;
+    array_push($VenteRecharge['data'], $data);
+
+    $data = isset($scratchAchat[$month]) ? $scratchAchat[$month] : 0;
+    array_push($scratchRecharge['data'], $data);
+  }
+
+  array_push($series,
+    (object)$AchatFacture,
+    (object)$VenteFacture,
+    (object)$AchatRecharge,
+    (object)$VenteRecharge,
+    (object)$scratchRecharge  // Added for Scratch Achat
+  );
+
+    return json_encode(array("categories"=>$categories,"series"=>$series));
+  }
+
+   function downloadFile($imageName){
+      $config = \Drupal::getContainer()->getParameter('cin_image');
+      $path = $config['path'];
+      $host = $config['host'];
+      $login = $config['login'];
+      $pass = $config['pass'];
+      $save_to = $config['save_to'];
+
+      $remote = "sftp://$host".$path."$imageName";
+      \Drupal::logger('upload_image_handler')->info('Begin download image : '. $remote);
+      $local = $save_to.$imageName;
+
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $remote);
+      curl_setopt($curl, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
+      curl_setopt($curl, CURLOPT_USERPWD, "$login:$pass");
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+      if($err){
+        \Drupal::logger('upload_image_handler')-> error('Response : '. $err);
+        return false;
+      }
+      curl_close($curl);
+
+      file_put_contents($local, $response);
+
+      \Drupal::logger('upload_image_handler')->info('Image Downloaded : '. $local);
+
+      return "/".$local;
+  }
+
+  /**
+   * Implements hook_entity_presave().
+   */
+  function dealer_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+    if($entity->getEntityType()->id()=="taxonomy_term" && $entity->bundle()=="ville") {
+      $ville_code = \Drupal::service('pathauto.alias_cleaner')->cleanString($entity->getName());
+      $entity->set("field_code", $ville_code);
+    }
+  }

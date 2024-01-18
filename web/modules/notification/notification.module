@@ -1,0 +1,89 @@
+<?php
+/**
+ * @file
+ * Code for the notification module.
+ */
+
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\user\Entity\User;
+
+
+
+/**
+ * Implements hook_theme().
+ */
+function notification_theme($existing, $type, $theme, $path) {
+
+  return array(
+    'list-notification' => array(
+      'variables' => array('header' => array(),'rows' => array(),)
+    ),
+  );
+
+}
+
+
+function notification_preprocess_page(&$variables) {
+
+  $current_user = \Drupal::currentUser();
+  $account = User::load($current_user->id());
+
+  $route = \Drupal::routeMatch()->getRouteName();
+  $path = "";
+  if($route == "user.login" || $route == "user.register" || $route == "user.pass") {
+    $path = '/';
+  }
+  else if ($route == "homepage") {
+    if($account->hasRole("administrator") || $current_user->id()==1) {
+      $path = '/admin';
+    }
+    elseif($account->hasRole("regional")) {
+      $path = '/admin/revendeurs/list';
+    }
+    elseif($account->hasRole("administrateur_backoffice")) {
+      $path = '/admin/structure/taxonomy/manage/tuile_dashboard/overview';
+    }
+  }
+  else if ($route == "admin") {
+    if($account->hasRole("regional")) {
+      $path = '/admin/revendeurs/list';
+    }
+    elseif($account->hasRole("administrateur_backoffice")) {
+      $path = '/admin/structure/taxonomy/manage/tuile_dashboard/overview';
+    }
+  }
+
+  if($path) {
+    $response = new RedirectResponse($path);
+    $response->send();
+    return;
+  }
+
+  $variables['#attached']['library'][] = 'dealer/dealer_library';
+
+  $variables['#attached']['library'][] = 'notification/notification_library';
+  $notificationCountUrl = \Drupal\Core\Url::fromRoute('api.notification.count',array(), array('absolute' => TRUE))->toString();
+  $variables['#attached']['drupalSettings']['notificationCountUrl'] = $notificationCountUrl;
+
+
+}
+
+function notification_user_login($account) {
+  if($account->hasRole("administrateur_backoffice")) {
+    $path = '/admin/structure/taxonomy/manage/tuile_dashboard/overview';
+    $response = new RedirectResponse($path);
+    $response->send();
+    return;
+  }
+  if($account->hasRole("regional")) {
+    $path = '/admin/revendeurs/list';
+    $response = new RedirectResponse($path);
+    $response->send();
+    return;
+  }
+}
+
+
+
+

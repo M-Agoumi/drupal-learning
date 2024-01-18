@@ -1,0 +1,48 @@
+api.cities:
+  path: '/api/cities'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::listCities'
+  requirements:
+    _permission: 'access content'
+
+api.configuration:
+  path: '/api/configuration'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::configuration'
+  requirements:
+    _permission: 'access content'
+
+api.catalogue:
+  path: '/api/catalogue'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::catalogue'
+  requirements:
+    _permission: 'access content'
+
+api.marge_reduction:
+  path: '/api/marge_reduction'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::marge_reduction'
+  requirements:
+    _permission: 'access content'
+
+api.tuile_dashboard:
+  path: '/api/tuile_dashboard'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::tuile_dashboard'
+  requirements:
+    _permission: 'access content'
+
+api.avantages:
+  path: '/api/avantages'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::avantages'
+  requirements:
+    _permission: 'access content'
+
+version.control.test:
+  path: '/api/version_control'
+  defaults:
+    _controller: 'Drupal\api\Controller\apiController::versionControl'
+  requirements:
+    _permission: 'access content'

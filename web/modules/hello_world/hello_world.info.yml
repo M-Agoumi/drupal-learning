@@ -1,0 +1,5 @@
+name: hello world custom
+description: this is a custom module
+package: example
+type: module
+core_version_requirement: ^9 || ^10

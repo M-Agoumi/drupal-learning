@@ -1,0 +1,15 @@
+configuration_generale.admin:
+  path: '/admin/configuration/configuration-generale'
+  defaults:
+    _form: '\Drupal\configuration\Form\ConfigurationGeneraleAdminForm'
+    _title: "Configuration générale"
+  requirements:
+    _role: 'administrator+administrateur_backoffice'
+
+import.revendeurs.admin:
+  path: '/admin/configuration/import'
+  defaults:
+    _form: '\Drupal\configuration\Form\ImportRevendeursAdminForm'
+    _title: "Importer revendeurs"
+  requirements:
+    _role: 'administrator+administrateur_backoffice'

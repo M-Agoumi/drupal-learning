@@ -1,0 +1,44 @@
+payment_methods.listing:
+  path: '/admin/payment-methods'
+  defaults:
+    _controller: '\Drupal\payment_methods\Controller\PaymentMethodsController::listing'
+    _title: 'Payment methods'
+  requirements:
+    _permission: 'administrator+administrateur_backoffice+regional'
+
+payment_methods.add:
+  path: '/admin/payment-methods/add'
+  defaults:
+      _form: '\Drupal\payment_methods\Form\payment_methodsForm'
+      _title: 'New payment method'
+  requirements:
+      _permission: 'administrator+administrateur_backoffice+regional'
+
+payment_methods.edit:
+  path: '/admin/payment-methods/update/{id}'
+  defaults:
+    _form: '\Drupal\payment_methods\Form\payment_methodsForm'
+    _title: 'Edit payment method'
+  requirements:
+    _permission: 'administrator+administrateur_backoffice+regional'
+
+payment_methods.enable:
+  path: '/admin/payment-methods/enable/{id}'
+  defaults:
+    _controller: '\Drupal\payment_methods\Controller\PaymentMethodsController::enable'
+  requirements:
+    _permission: 'administrator+administrateur_backoffice+regional'
+
+payment_methods.disable:
+  path: '/admin/payment-methods/disable/{id}'
+  defaults:
+      _controller: '\Drupal\payment_methods\Controller\PaymentMethodsController::disable'
+  requirements:
+      _permission: 'administrator+administrateur_backoffice+regional'
+
+api.notification:
+  path: '/admin/payment-methods/disable/'
+  defaults:
+    _controller: '\Drupal\payment_methods\Controller\PaymentMethodsController::disable'
+  requirements:
+    _permission: 'administrator+administrateur_backoffice+regional'

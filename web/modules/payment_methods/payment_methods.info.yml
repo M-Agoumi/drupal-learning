@@ -1,0 +1,6 @@
+name: 'payment_methods'
+type: module
+description: 'add and manage payment methods for saphir'
+package: Custom
+core: 8.x
+core_version_requirement: ^8 || ^9 || ^10

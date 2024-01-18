@@ -1,0 +1,5 @@
+configuration_generale.admin:
+  title: "Configuration générale"
+  description: "Configuration générale"
+  parent: system.admin_config
+  route_name: configuration_generale.admin

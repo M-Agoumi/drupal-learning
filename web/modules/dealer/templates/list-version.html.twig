@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <h2> Liste des versions </h2>
+    <div class="row" style="margin-bottom:1em;">
+        <div class="col-md-12">
+            <div class="widget">
+                <a style="float:right;background-color:#ff7901;border-color:#f5f5f2;" class="btn btn-info bs-tooltip btn-telecharger-liste" href="/node/add/version" >
+                    Ajouter une version <i class="fa fa-plus" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <table id="list_version" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            {% for column in header %}
+                <th>
+                    {{ column }}
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for key, data in row %}
+                    {% if key != 'action' %}
+                        <td>{{ data }}</td>
+                    {% else %}
+                        <td>
+                            <a href="{{ data.edit }}"><i style="float:left;color:#ff7901;margin-right: 5px;" class="fa fa-2x fa-edit"></i></a>
+                            <a href="{{ data.delete }}"><i style="float:left;color:#ff7901;" class="fa fa-2x fa-trash-o"></i></a>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,175 @@
+
+
+<h2>Informations personnelles </h2>
+
+<div class="modal-body row">
+    <div class="col-md-4">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr >
+                        <td style="max-width : 150px"><strong>Nom :</strong></td>
+                        <td>{{ userInfos.last_name }}</td>
+                    </tr>
+                    <tr >
+                        <td style="max-width : 150px"><strong>Prenom :</strong></td>
+                        <td>{{ userInfos.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td style="max-width : 150px"><strong>Numéro de telephone :</strong></td>
+                        <td id="msisdn" >{{ userInfos.msisdn }}</td>
+                    </tr>
+                    <tr>
+                        <td style="max-width : 150px"><strong>CIN :</strong></td>
+                        <td>{{ userInfos.cin }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <td style="max-width : 150px"><strong>Email :</strong></td>
+                        <td id="dealerEmail" >{{ userInfos.email }}</td>
+                    </tr>
+                    <tr>
+                        <td style="max-width : 150px"><strong>Adresse :</strong></td>
+                        <td>{{ userInfos.address }}</td>
+                    </tr>
+                    <tr>
+                        <td style="max-width : 150px"><strong>Date d'inscription :</strong></td>
+                        <td>{{ userInfos.created_at }}</td>
+                    </tr>
+                    <tr>
+                        {% if userInfos.status == "VERIFIED" %}
+                            <td class="accepterRevendeurClicked" style="max-width : 150px"><strong>Statut :</strong></td>
+                            <td class="accepterRevendeurClicked vendValide validated"> ✓ Validé</td>
+                            <td class="accepterRevendeurClicked vendValide declined"> ✓ Refusé</td>
+                        {% else %}
+
+                                <td  style="max-width : 150px">
+                                   <div class="accepterRevendeurNotClicked"> <strong>Actions :</strong> </div>
+                                   <div class="accepterRevendeurClicked"> <strong>Statut :</strong> </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm accepterRevendeur accepterRevendeurNotClicked" data-urlAccept="{{ path('revendeur.accept',{'id_revendeur':userInfos.id})}}">Accepter</button>
+                                    <button type="button" class="btn btn-danger btn-sm declinerRevendeur accepterRevendeurNotClicked" data-urlDecline="{{ path('revendeur.decline',{'id_revendeur':userInfos.id})}}">Refuser</button>
+                                    <div class="accepterRevendeurClicked vendValide validated" style="display: none;">✓ Validé</div>
+                                    <div class="accepterRevendeurClicked vendValide declined" style="display: none;">✓ Refusé</div>
+                                </td>
+
+                        {% endif %}
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <img src="{{ userInfos.cin_file }}" class="img-thumbnail" alt="{{ userInfos.cin }}">
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row" style="margin-bottom:1em;">
+        <div class="col-md-12">
+            <h2>Validation des retailers</h2>
+            <div class="widget">
+                <a style="float:right;background-color:#ff7901;border-color:#f5f5f2;" class="btn btn-info bs-tooltip btn-telecharger-liste" href="{{ path('unverified.retailers.list.in.format', {'id_revendeur': userInfos.id, 'format': 'xlsx'}) }}" >
+                    Télécharger <i class="fa fa-download" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom:1em;">
+        <div class="col-md-12">
+            <table id="list_dealer" class="display" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    {% for column in header %}
+                        <th>
+                            {{ column }}
+                        </th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for retailer in retailers %}
+                    {%  if "DUPLICATED" == retailer.status  %}
+                        <tr style="background-color:gold ">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                    <td class="last_name">
+                        {{ retailer.last_name }}
+                    </td>
+                    <td class="first_name">
+                        {{ retailer.first_name }}
+                    </td>
+                    <td class="msisdn">
+                        {{ retailer.msisdn }}
+                    </td>
+                    <td class="adresse">
+                        {{ retailer.adresse }}
+                    </td>
+                    <td>
+                        {%  if "-" == retailer.maps_link  %}
+                                <i style="color: #a6a6a6;" class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+                        {% else %}
+                            <a href="{{ retailer.maps_link }}" target="_blank">
+                                <i style="color: #ff7901;" class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {%  if "DUPLICATED" == retailer.status  %}
+                            <button type="button" class="btn btn-success btn-sm avtiveDealer"
+                                    data-duplicated="{{ path('list.revendeur.duplicated.retailer',{'msisdn':retailer.msisdn})}}"
+                                    data-url="{{ path('retailer.activate',{'id_revendeur':userInfos.id,'id_retailer':retailer.id})}}"
+                                    data-retailer="{{ retailer.first_name }} {{ retailer.last_name }} ({{ retailer.msisdn }})"
+                            >
+                                Activer
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-success btn-sm avtiveDealer"
+                                    data-url="{{ path('retailer.activate',{'id_revendeur':userInfos.id,'id_retailer':retailer.id})}}"
+                                    data-retailer="{{ retailer.first_name }} {{ retailer.last_name }} ({{ retailer.msisdn }})"
+                            >
+                                Activer
+                            </button>
+                        {% endif %}
+
+
+
+
+                        <button type="button" class="btn btn-danger btn-sm declineDealer"
+                                data-url="{{ path('retailer.decline',{'id_revendeur':userInfos.id,'id_retailer':retailer.id})}}"
+                                data-retailer="{{ retailer.first_name }} {{ retailer.last_name }} ({{ retailer.msisdn }})"
+                        >
+                            Decliner
+                        </button>
+
+                        <!--button class="avtiveDealer" data-url="{{ path('retailer.activate',{'id_revendeur':userInfos.id,'id_retailer':retailer.id})}}" type="button">Activer<i class="icon-edit"></i></button>
+                        <button class="declineDealer" data-url="{{ path('retailer.decline',{'id_revendeur':userInfos.id,'id_retailer':retailer.id})}}" type="button">Decliner<i class="icon-edit"></i></button-->
+                        <div class="alert alert-success in activated" style="margin-bottom: 0;">
+                            <strong>Success!</strong> Retailer Activé.
+                        </div>
+                        <div class="alert alert-danger in declined" style="margin-bottom: 0;">
+                            <strong>Success!</strong> Retailer Decliné.
+                        </div>
+                        {#<div class="activated" ><p style="color: limegreen">Activé</p></div>
+                        <div class="declined" ><p style="color: #da223a">Decliné</p></div>#}
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
